@@ -73,10 +73,10 @@ function App() {
 
   return (
     <>
-      <audio src="../src/music/sound.mp3" ref={audioRef} />
+      <audio src="/src/music/sound.mp3" ref={audioRef} />
       <Modals fungsi={playAudio} />
       <Box
-        bgImage="url('../src/image/bg.jpg')"
+        bgImage="url('/src/image/bg.jpg')"
         bgPosition="center"
         bgSize={"cover"}
       >
@@ -111,7 +111,7 @@ function App() {
             <animated.div style={ataskebawah}>
               <Image ref={ref1} width="250px"
                 height="auto"
-                src='../src/image/bismillah.png'
+                src='/src/image/bismillah.png'
                 pb={"6"}></Image>
             </animated.div>
           </Center>

@@ -19,7 +19,7 @@ function Modals(props) {
                 <ModalContent>
                     <ModalBody>
                         <Box
-                            bgImage="url('../src/image/bg.jpg')"
+                            bgImage="url('/src/image/bg.jpg')"
                             bgPosition="center"
                             bgSize={"cover"}
                         >
