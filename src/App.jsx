@@ -1,9 +1,19 @@
 import { Box, Text, Center, Image, Grid } from '@chakra-ui/react'
 import '@fontsource/rouge-script';
 import { animated, useSpring, useInView } from '@react-spring/web'
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import Modals from './Modal';
+
 
 function App() {
+
+  const audioRef = useRef();
+
+  const playAudio = () => {
+    console.log("berhasil")
+    audioRef.current.play();
+  };
+
 
   const [ref1, ataskebawah] = useInView(
     () => ({
@@ -20,7 +30,18 @@ function App() {
     () => ({
       from: { y: 100, opacity: 0 },
       to: { y: 0, opacity: 1 },
-    config: { duration: 1300 },
+      config: { duration: 1300 },
+    }),
+    {
+      rootMargin: '-10% 0%',
+    }
+  )
+
+  const [ref3, fade] = useInView(
+    () => ({
+      from: { opacity: 0 },
+      to: { opacity: 1 },
+      config: { duration: 2000 },
     }),
     {
       rootMargin: '-10% 0%',
@@ -38,7 +59,7 @@ function App() {
     to: { y: 0, opacity: 1 },
     config: { duration: 1300 },
   });
-  const fade = useSpring({
+  const fade2 = useSpring({
     from: { opacity: 0 },
     to: { opacity: 1 },
     config: { duration: 2000 },
@@ -47,28 +68,13 @@ function App() {
 
 
   useEffect(() => {
-    const audio = new Audio("../src/music/sound.mp3");
-    audio.volume = 0.3; // Atur volume lagu (0 hingga 1)
-
-    // Looping lagu secara terus-menerus
-    //  audio.addEventListener("ended", () => {
-    //   audio.currentTime = 0;
-    //   audio.play();
-    // });
-
-    // Mulai memutar lagu saat komponen didalam perenderan
-    audio.play();
-
-    // Hentikan pemutaran lagu saat komponen dibongkar
-    return () => {
-      audio.pause();
-      audio.currentTime = 0;
-    };
 
   }, [])
 
   return (
     <>
+      <audio src="../src/music/sound.mp3" ref={audioRef} />
+      <Modals fungsi={playAudio} />
       <Box
         bgImage="url('../src/image/bg.jpg')"
         bgPosition="center"
@@ -83,7 +89,7 @@ function App() {
                 fontSize={"3xl"}
               >Undangan Pernikahan</Text>
             </animated.div>
-            <animated.div style={fade}>
+            <animated.div style={fade2}>
               <Text textAlign={"center"}
                 fontWeight={"bold"} fontFamily="Rouge Script, cursive"
                 fontSize={"7xl"}>Nanda & Dian</Text>
@@ -117,13 +123,13 @@ function App() {
             </Box>
           </animated.div>
           <animated.div style={bawahkeatas}>
-          <Box py={"14"} textAlign={"center"} ref={ref2}>
-            <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">Nanda Putra Wijaya</Text>
-            <Text fontSize={"xl"}>Anak Pertama Bapak Wijaya dan Ibu Yuni</Text>
-            <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">&</Text>
-            <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">Dian Ayu Putri</Text>
-            <Text fontSize={"xl"}>Anak Pertama Bapak Wibowo dan Ibu Ani</Text>
-          </Box>
+            <Box py={"14"} textAlign={"center"} ref={ref2}>
+              <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">Nanda Putra Wijaya</Text>
+              <Text fontSize={"xl"}>Anak Pertama Bapak Wijaya dan Ibu Yuni</Text>
+              <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">&</Text>
+              <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">Dian Ayu Putri</Text>
+              <Text fontSize={"xl"}>Anak Pertama Bapak Wibowo dan Ibu Ani</Text>
+            </Box>
           </animated.div>
         </Box>
       </Box>
@@ -131,21 +137,25 @@ function App() {
         <Text py={"14"} textAlign={"center"} fontSize={"2xl"} fontWeight={"semibold"}>Waktu Pelaksanaan</Text>
         <Box>
           <Center>
-            <Grid templateColumns='repeat(3, 1fr)' gap={26} fontSize={"3xl"}>
-              <Box textAlign={"center"} >
-                <Text>Minggu</Text>
-                <Text>5</Text>
-                <Text>Januari 2023</Text>
-              </Box>
-              <Box textAlign={"center"}>
-                <Text>Akad</Text>
-                <Text>2 Januari 2023</Text>
-              </Box>
-              <Box textAlign={"center"}>
-                <Text>Resepsi</Text>
-                <Text>5 Januari 2023</Text>
-              </Box>
+          <animated.div style={fade}>
+            <Grid ref={ref3} templateColumns='repeat(3, 1fr)' gap={26} fontSize={"2xl"}>
+              
+                <Box textAlign={"center"} px={"14"} >
+                  <Text>Minggu</Text>
+                  <Text fontSize={"4xl"} fontWeight={"bold"}>5</Text>
+                  <Text>Januari 2023</Text>
+                </Box>
+                <Box textAlign={"center"}>
+                  <Text>Akad</Text>
+                  <Text>2 Januari 2023</Text>
+                </Box>
+                <Box textAlign={"center"}>
+                  <Text>Resepsi</Text>
+                  <Text>5 Januari 2023</Text>
+                </Box>
+             
             </Grid>
+            </animated.div>
           </Center>
         </Box>
       </Box>
