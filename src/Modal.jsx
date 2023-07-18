@@ -1,6 +1,7 @@
 import { Button, Modal, ModalOverlay, ModalContent, ModalBody, } from "@chakra-ui/react";
 import { useState } from "react";
 import { Box, Text, Center } from '@chakra-ui/react'
+import foto from "/src/image/bg.jpg"
 
 
 function Modals(props) {
@@ -19,7 +20,7 @@ function Modals(props) {
                 <ModalContent>
                     <ModalBody>
                         <Box
-                            bgImage="url('/src/image/bg.jpg')"
+                            bgImage={foto}
                             bgPosition="center"
                             bgSize={"cover"}
                         >
