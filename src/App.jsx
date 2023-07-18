@@ -6,7 +6,9 @@ import Modals from './Modal';
 import Countdown from 'react-countdown';
 import AnimatedComponent from './Animasi';
 import countdownRenderer from './CountDown';
-
+import foto from "/src/image/bg.jpg"
+import bismillah from "/src/image/bismillah.png"
+import sound from "/src/music/sound.mp3"
 
 
 
@@ -53,10 +55,10 @@ function App() {
 
   return (
     <>
-      <audio src="/src/music/sound.mp3" ref={audioRef} />
+      <audio src={sound} ref={audioRef} />
       <Modals fungsi={playAudio} />
       <Box
-        bgImage="url('/src/image/bg.jpg')"
+        bgImage={foto}
         bgPosition="center"
         bgSize={"cover"}
       >
@@ -101,7 +103,7 @@ function App() {
             })}>
               <Image width="250px"
                 height="auto"
-                src='/src/image/bismillah.png'
+                src={bismillah}
                 pb={"6"}></Image>
             </AnimatedComponent>
           </Center>
