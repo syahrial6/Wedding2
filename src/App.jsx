@@ -1,4 +1,4 @@
-import { Box, Text, Center, Image, Grid, Button, Link, FormControl, FormLabel, Input, RadioGroup, Radio, Card, Heading, CardHeader, CardBody, Divider, CardFooter } from '@chakra-ui/react'
+import { Box, Text, Center, Image, Grid, Button, Link, FormControl, FormLabel, Input, RadioGroup, Radio, Badge, Card, Stack, Heading, CardFooter, CardBody, Divider } from '@chakra-ui/react'
 import '@fontsource/rouge-script';
 import { animated, useSpring } from '@react-spring/web'
 import { useRef, useState, useEffect } from 'react';
@@ -13,11 +13,14 @@ import bingkai from "/src/image/bingkai.png"
 import bismillah from "/src/image/bismillah.png"
 import sound from "/src/music/sound2.mp3"
 import { tambahdata, getData } from './firebase';
+import swal from 'sweetalert';
+
 
 
 
 
 function App() {
+
   const [isScrollEnabled, setScrollEnabled] = useState(false);
   const [isButtonVisible, setButtonVisible] = useState(true);
   const [nama, setNama] = useState("")
@@ -29,14 +32,16 @@ function App() {
   console.log(data)
 
   useEffect(() => {
-
     fetchData()
+   
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
 
     };
   }, [isScrollEnabled]);
+
+  
 
 
   const toggleScroll = () => {
@@ -66,7 +71,7 @@ function App() {
 
   const playAudio = () => {
     console.log("berhasil")
-    audioRef.current.play();
+    // audioRef.current.play();
     setButtonVisible(false)
   };
 
@@ -87,13 +92,15 @@ function App() {
     e.preventDefault();
     await tambahdata({ kehadiran, nama, ucapan, })
     console.log("masuk")
+    swal("Good job!", "You clicked the button!", "success");
+    window.location.reload();
   }
 
   const fetchData = async () => {
     const datas = await getData()
     setData(datas)
   }
-
+  
 
 
   return (
@@ -392,33 +399,26 @@ function App() {
         <Text py={"14"} fontSize={"2xl"} fontWeight={"extrabold"} textAlign={"center"}>Ucapan</Text>
         <Box>
           <Center>
-            <Grid>            <Card width={"80%"}>
-              <CardHeader>
-                <Heading size='md'>Dewqi</Heading>
-              </CardHeader>
-              <Divider />
-              <CardBody>
-                <Text>Selamat sadasdvqfwegweF</Text>
-              </CardBody>
-              <CardFooter>
-                <Divider />
-                <Text fontWeight={"bold"}>Saya Tidak Akan Hadir</Text>
-              </CardFooter>
-            </Card>
+            <Grid gap={6}>
+{data.map((data1,index)=>(
 
-              <Card width={"80%"}>
-                <CardHeader>
-                  <Heading size='md'>Dewqi</Heading>
-                </CardHeader>
-                <Divider />
+
+              <Card key={index} maxW='sm'>
                 <CardBody>
-                  <Text>Selamat sadasdvqfwegweF</Text>
+                  <Stack mt='6' spacing='3'>
+                    <Heading size='md'>{data1.nama}</Heading>
+                    <Text>
+                      {data1.ucapan}
+                    </Text>
+                    <Badge colorScheme='green'>{data1.kehadiran}</Badge>
+                  </Stack>
                 </CardBody>
+                <Divider />
                 <CardFooter>
-                  <Divider />
-                  <Text fontWeight={"bold"}>Saya Tidak Akan Hadir</Text>
                 </CardFooter>
               </Card>
+))}
+
             </Grid>
 
 
