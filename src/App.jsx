@@ -1,4 +1,4 @@
-import { Box, Text, Center, Image, Grid, Button, Link } from '@chakra-ui/react'
+import { Box, Text, Center, Image, Grid, Button, Link, FormControl, FormLabel, Input, RadioGroup, Radio, Card, Heading, CardHeader, CardBody, Divider, CardFooter } from '@chakra-ui/react'
 import '@fontsource/rouge-script';
 import { animated, useSpring } from '@react-spring/web'
 import { useRef, useState, useEffect } from 'react';
@@ -7,19 +7,30 @@ import AnimatedComponent from './Animasi';
 import countdownRenderer from './CountDown';
 import bunga2 from "/src/image/bunga2.png"
 import bunga1 from "/src/image/bunga1.png"
+import cowok from "/src/image/cowok.png"
+import cewek from "/src/image/cewek.png"
 import bingkai from "/src/image/bingkai.png"
 import bismillah from "/src/image/bismillah.png"
 import sound from "/src/music/sound2.mp3"
+import { tambahdata, getData } from './firebase';
+
 
 
 
 function App() {
   const [isScrollEnabled, setScrollEnabled] = useState(false);
   const [isButtonVisible, setButtonVisible] = useState(true);
+  const [nama, setNama] = useState("")
+  const [ucapan, setUcapan] = useState("")
+  const [kehadiran, setKehadiran] = useState("")
+  const [data, setData] = useState([])
   const audioRef = useRef();
   const kontenRef = useRef(null);
+  console.log(data)
 
   useEffect(() => {
+
+    fetchData()
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -55,7 +66,7 @@ function App() {
 
   const playAudio = () => {
     console.log("berhasil")
-    // audioRef.current.play();
+    audioRef.current.play();
     setButtonVisible(false)
   };
 
@@ -72,13 +83,24 @@ function App() {
     config: { duration: 2000 },
   });
 
+  const kirim = async (e) => {
+    e.preventDefault();
+    await tambahdata({ kehadiran, nama, ucapan, })
+    console.log("masuk")
+  }
+
+  const fetchData = async () => {
+    const datas = await getData()
+    setData(datas)
+  }
+
 
 
   return (
     <>
       <audio src={sound} ref={audioRef} />
       <Box pb={"96"}
-        bgColor={"#b0d1b1"}
+        bgGradient={"linear-gradient(to bottom right, #b0d1b1, #819981)"}
         bgPosition="center"
         bgSize={"cover"}
       >
@@ -87,6 +109,9 @@ function App() {
           width="50%" height="50%" objectFit="cover"></Image>
 
         <Center>
+          <Image src={bunga1}
+            transform="translate(-50%, 150%)"
+            width="50%" height="50%" objectFit="cover"></Image>
 
           <Box pt={"72"} pb={"32"} color={"white"} position={"absolute"}>
             <animated.div style={ataskebawah2}>
@@ -127,9 +152,6 @@ function App() {
                   &
                 </Text>
               </Box>
-              <Image src={bunga1}
-          transform="translate(0%, 100%)"
-          width="50%" height="50%" objectFit="cover"></Image>
               <Center>
                 {isButtonVisible && (
                   <Button href="#konten" onClick={() => { toggleScroll(); playAudio(); scrollToKonten(); }}>
@@ -194,9 +216,45 @@ function App() {
             config: { duration: 1100 },
           })}>
             <Box py={"14"} textAlign={"center"} >
+              <Center>
+                <AnimatedComponent animationConfig={() => ({
+                  from: {
+                    opacity: 0,
+                    y: 100,
+                  },
+                  to: {
+                    opacity: 1,
+                    y: 0,
+                  },
+                  rootMargin: '-30% 0%',
+                  config: { duration: 1100 },
+                })}>
+                  <Box width={"200px"} height={"200px"} borderRadius={"50%"} bgColor={"#b0d1b1"} overflow={"hidden"}>
+                    <Image src={cowok} margin={"auto"} width={"60%"} ></Image>
+                  </Box>
+                </AnimatedComponent>
+              </Center>
               <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">Nanda Putra Wijaya</Text>
               <Text fontSize={"xl"}>Anak Pertama Bapak Wijaya dan Ibu Yuni</Text>
               <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">&</Text>
+              <Center>
+                <AnimatedComponent animationConfig={() => ({
+                  from: {
+                    opacity: 0,
+                    y: 100,
+                  },
+                  to: {
+                    opacity: 1,
+                    y: 0,
+                  },
+                  rootMargin: '-30% 0%',
+                  config: { duration: 1100 },
+                })}>
+                  <Box width={"200px"} height={"200px"} borderRadius={"50%"} bgColor={"#b0d1b1"} overflow={"hidden"}>
+                    <Image src={cewek} margin={"auto"} width={"60%"} ></Image>
+                  </Box>
+                </AnimatedComponent>
+              </Center>
               <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">Dian Ayu Putri</Text>
               <Text fontSize={"xl"}>Anak Pertama Bapak Wibowo dan Ibu Ani</Text>
             </Box>
@@ -215,7 +273,7 @@ function App() {
         rootMargin: '-30% 0%',
         config: { duration: 1100 },
       })}>
-        <Box bgColor={"#f4e2e2"}>
+        <Box bgColor={"#b0d1b1"}>
           <Text py={"14"} textAlign={"center"} fontSize={"2xl"} fontWeight={"semibold"}>Waktu Pelaksanaan</Text>
           <Box>
             <Center>
@@ -273,7 +331,7 @@ function App() {
           <Button my={"14"} color={"white"} bgColor={"orange.600"}><Link href='https://goo.gl/maps/A34ZddrR9BpzqQmQ8' target='_blank'>Google Maps</Link></Button>
         </AnimatedComponent>
       </Box>
-      <Box bgColor={"#f4e2e2"} >
+      <Box bgColor={"#b0d1b1"} >
         <AnimatedComponent animationConfig={() => ({
           from: {
             opacity: 0,
@@ -302,9 +360,70 @@ function App() {
             semoga bisa berjumpa di lain kesempatan
             <br />
             <br />
-            Stay safe & jaga kesehatan ya :)
+            Stay safe & jaga kesehatan ya
           </Text>
         </AnimatedComponent>
+      </Box>
+
+      <Box py={"12"}>
+        <Box textAlign={"center"}>
+          <Text fontSize={"4xl"} fontWeight={"bold"}>RSVP</Text>
+          <Text fontSize={"2xl"}>Berikan Ucapan</Text>
+        </Box>
+        <form onSubmit={kirim}>
+          <FormControl>
+            <FormLabel>Nama</FormLabel>
+            <Input onChange={(e) => setNama(e.target.value)} type='text' />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Ucapan</FormLabel>
+            <Input onChange={(e) => setUcapan(e.target.value)} type='text' />
+          </FormControl>
+          <FormControl>
+            <RadioGroup onChange={setKehadiran}>
+              <Radio value='Saya Akan Hadir'>Saya Akan Hadir</Radio>
+              <Radio value='Saya Tidak Hadir'>Saya Tidak Bisa Hadir</Radio>
+            </RadioGroup>
+          </FormControl>
+          <Button bgColor={"#b0d1b1"} mt={"12"} type='submit'>Kirim</Button>
+        </form>
+      </Box>
+      <Box bgColor={"#b0d1b1"}>
+        <Text py={"14"} fontSize={"2xl"} fontWeight={"extrabold"} textAlign={"center"}>Ucapan</Text>
+        <Box>
+          <Center>
+            <Grid>            <Card width={"80%"}>
+              <CardHeader>
+                <Heading size='md'>Dewqi</Heading>
+              </CardHeader>
+              <Divider />
+              <CardBody>
+                <Text>Selamat sadasdvqfwegweF</Text>
+              </CardBody>
+              <CardFooter>
+                <Divider />
+                <Text fontWeight={"bold"}>Saya Tidak Akan Hadir</Text>
+              </CardFooter>
+            </Card>
+
+              <Card width={"80%"}>
+                <CardHeader>
+                  <Heading size='md'>Dewqi</Heading>
+                </CardHeader>
+                <Divider />
+                <CardBody>
+                  <Text>Selamat sadasdvqfwegweF</Text>
+                </CardBody>
+                <CardFooter>
+                  <Divider />
+                  <Text fontWeight={"bold"}>Saya Tidak Akan Hadir</Text>
+                </CardFooter>
+              </Card>
+            </Grid>
+
+
+          </Center>
+        </Box>
       </Box>
     </>
   )
