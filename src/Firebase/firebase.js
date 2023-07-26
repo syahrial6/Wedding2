@@ -38,4 +38,11 @@ export const tambahdata = async (objek) => {
     return docRef
 }
 
+// tambahdata({
+//   kehadiran:"saya hadir",
+//   nama:"feri",
+//   ucapan:"selamat ya",
+//   }
+// )
+
 

@@ -3,19 +3,19 @@ import '@fontsource/rouge-script';
 import { animated, useSpring } from '@react-spring/web'
 import { useRef, useState, useEffect } from 'react';
 import Countdown from 'react-countdown';
-import AnimatedComponent from './Animasi';
-import countdownRenderer from './CountDown';
+import AnimatedComponent from './Components/Animasi';
+import countdownRenderer from './Components/CountDown';
 import bunga2 from "/src/image/bunga2.png"
+import bg from "/src/image/bg.jpg"
 import bunga1 from "/src/image/bunga1.png"
-import cowok from "/src/image/cowok.png"
-import cewek from "/src/image/cewek.png"
 import bingkai from "/src/image/bingkai.png"
-import bismillah from "/src/image/bismillah.png"
 import sound from "/src/music/sound2.mp3"
-import { tambahdata, getData } from './firebase';
+import { tambahdata, getData } from './Firebase/firebase';
 import swal from 'sweetalert';
+import Info from './Components/Info';
 
 
+// perbaikan selanjutnya bagaimana ketika state diubah tidak langsung menjalanlankan fetch tapi menunggu tombol kirim dulu
 
 
 
@@ -23,17 +23,27 @@ function App() {
 
   const [isScrollEnabled, setScrollEnabled] = useState(false);
   const [isButtonVisible, setButtonVisible] = useState(true);
+  const audioRef = useRef();
+  const kontenRef = useRef(null);
   const [nama, setNama] = useState("")
   const [ucapan, setUcapan] = useState("")
   const [kehadiran, setKehadiran] = useState("")
-  const [data, setData] = useState([])
-  const audioRef = useRef();
-  const kontenRef = useRef(null);
+  const [data,setData]= useState([])
+  const objek = {kehadiran,nama,ucapan}
   console.log(data)
 
+
+  const info = {
+    namalk : "Wahyu Ahmad",
+    namapr : "Dian Winata Fitri",
+    namaayahlk : "Gunawan Haryadi",
+    namaibulk : "Dewi Ayu",
+    namaayahpr : "Wijaya Hadi",
+    namaibupr : "Jasmine",
+  }
+
   useEffect(() => {
-    fetchData()
-   
+  
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -41,7 +51,7 @@ function App() {
     };
   }, [isScrollEnabled]);
 
-  
+
 
 
   const toggleScroll = () => {
@@ -61,13 +71,15 @@ function App() {
     }
   };
 
+
+  // countdown waktu
   const targetDate = new Date('July 29, 2023 12:00:00');
   const currentDate = new Date();
   const timeDifference = targetDate.getTime() - currentDate.getTime();
   const milliseconds = Math.max(timeDifference, 0);
 
 
-  // batas kode hitungan mundur
+  
 
   const playAudio = () => {
     console.log("berhasil")
@@ -88,26 +100,33 @@ function App() {
     config: { duration: 2000 },
   });
 
-  const kirim = async (e) => {
+  // mengirim ucapan
+  const kirim =  async(e) => {
     e.preventDefault();
-    await tambahdata({ kehadiran, nama, ucapan, })
+    await tambahdata(objek)
     console.log("masuk")
     swal("Good job!", "You clicked the button!", "success");
     window.location.reload();
   }
 
-  const fetchData = async () => {
-    const datas = await getData()
-    setData(datas)
-  }
+
+   useEffect(()=>{
+    const fetchData = async () => {
+      const result = await getData();
+      setData(result);
+      console.log(result);
+    };
+    fetchData();
+   },[])
   
+
 
 
   return (
     <>
       <audio src={sound} ref={audioRef} />
       <Box pb={"96"}
-        bgGradient={"linear-gradient(to bottom right, #b0d1b1, #819981)"}
+        bgImage={bg}
         bgPosition="center"
         bgSize={"cover"}
       >
@@ -126,13 +145,14 @@ function App() {
                 textAlign={"center"}
                 fontSize={"3xl"}
                 fontWeight={"bold"}
+                color={"#387d10"}
               >The Wedding Of</Text>
             </animated.div>
             <animated.div style={fade2}>
               <Box position="relative" pb="6">
                 <Image src={bingkai} />
                 <Text py={"10"}
-                  color={"whiteAlpha.900"}
+                  color={"#d4b94e"}
                   position="absolute"
                   top="50%"
                   left="50%"
@@ -155,13 +175,20 @@ function App() {
                   fontFamily="Rouge Script, cursive"
                   fontSize="7xl"
                   zIndex="5"
+                  color={"#d4b94e"}
                 >
                   &
                 </Text>
               </Box>
               <Center>
                 {isButtonVisible && (
-                  <Button href="#konten" onClick={() => { toggleScroll(); playAudio(); scrollToKonten(); }}>
+                  <Button
+                    href="#konten"
+                    onClick={() => { toggleScroll(); playAudio(); scrollToKonten(); }}
+                    color={"white"}
+                    bgColor={"#387d10"}
+                    borderRadius={"full"}
+                  >
                     {isScrollEnabled ? null : "Buka Undangan"}
                   </Button>
                 )}
@@ -172,101 +199,14 @@ function App() {
 
       </Box>
       <Box>
-        <Box ref={kontenRef} py={"14"}>
-          <Center>
-            <AnimatedComponent animationConfig={() => ({
-              from: {
-                opacity: 0,
-                y: 100,
-              },
-              to: {
-                opacity: 1,
-                y: 0,
-              },
-              rootMargin: '-30% 0%',
-            })}>
-              <Image width="250px"
-                height="auto"
-                src={bismillah}
-                pb={"6"}></Image>
-            </AnimatedComponent>
-          </Center>
-          <AnimatedComponent animationConfig={() => ({
-            from: {
-              opacity: 0,
-              y: 100,
-            },
-            to: {
-              opacity: 1,
-              y: 0,
-            },
-            rootMargin: '-30% 0%',
-            config: { duration: 1100 },
-          })}>
-            <Box textAlign={"center"} fontSize={"xl"}>
-              <Text >Assalamualaikum Warahmatullahi Wabarakatuh.</Text>
-              <Text >Dengan memohon rahmat dan ridha Allah swt,</Text>
-              <Text >kami bermaksud mengundang Bapak/Ibu/Saudara/Saudari pada acara pernikahan kami</Text>
-            </Box>
-          </AnimatedComponent>
-
-          <AnimatedComponent animationConfig={() => ({
-            from: {
-              opacity: 0,
-              y: 100,
-            },
-            to: {
-              opacity: 1,
-              y: 0,
-            },
-            rootMargin: '-30% 0%',
-            config: { duration: 1100 },
-          })}>
-            <Box py={"14"} textAlign={"center"} >
-              <Center>
-                <AnimatedComponent animationConfig={() => ({
-                  from: {
-                    opacity: 0,
-                    y: 100,
-                  },
-                  to: {
-                    opacity: 1,
-                    y: 0,
-                  },
-                  rootMargin: '-30% 0%',
-                  config: { duration: 1100 },
-                })}>
-                  <Box width={"200px"} height={"200px"} borderRadius={"50%"} bgColor={"#b0d1b1"} overflow={"hidden"}>
-                    <Image src={cowok} margin={"auto"} width={"60%"} ></Image>
-                  </Box>
-                </AnimatedComponent>
-              </Center>
-              <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">Nanda Putra Wijaya</Text>
-              <Text fontSize={"xl"}>Anak Pertama Bapak Wijaya dan Ibu Yuni</Text>
-              <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">&</Text>
-              <Center>
-                <AnimatedComponent animationConfig={() => ({
-                  from: {
-                    opacity: 0,
-                    y: 100,
-                  },
-                  to: {
-                    opacity: 1,
-                    y: 0,
-                  },
-                  rootMargin: '-30% 0%',
-                  config: { duration: 1100 },
-                })}>
-                  <Box width={"200px"} height={"200px"} borderRadius={"50%"} bgColor={"#b0d1b1"} overflow={"hidden"}>
-                    <Image src={cewek} margin={"auto"} width={"60%"} ></Image>
-                  </Box>
-                </AnimatedComponent>
-              </Center>
-              <Text fontSize={"6xl"} fontFamily="Rouge Script, cursive">Dian Ayu Putri</Text>
-              <Text fontSize={"xl"}>Anak Pertama Bapak Wibowo dan Ibu Ani</Text>
-            </Box>
-          </AnimatedComponent>
-        </Box>
+        <Info 
+        kontenRef={kontenRef} 
+        namapr={info.namapr} 
+        namalk={info.namalk} 
+        namaayahlk={info.namaayahlk} 
+        namaibulk={info.namaibulk}
+        namaayahpr={info.namaayahpr}
+        namaibupr={info.namaibupr}/>
       </Box>
       <AnimatedComponent animationConfig={() => ({
         from: {
@@ -377,54 +317,86 @@ function App() {
           <Text fontSize={"4xl"} fontWeight={"bold"}>RSVP</Text>
           <Text fontSize={"2xl"}>Berikan Ucapan</Text>
         </Box>
-        <form onSubmit={kirim}>
-          <FormControl>
-            <FormLabel>Nama</FormLabel>
-            <Input onChange={(e) => setNama(e.target.value)} type='text' />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Ucapan</FormLabel>
-            <Input onChange={(e) => setUcapan(e.target.value)} type='text' />
-          </FormControl>
-          <FormControl>
-            <RadioGroup onChange={setKehadiran}>
-              <Radio value='Saya Akan Hadir'>Saya Akan Hadir</Radio>
-              <Radio value='Saya Tidak Hadir'>Saya Tidak Bisa Hadir</Radio>
-            </RadioGroup>
-          </FormControl>
-          <Button bgColor={"#b0d1b1"} mt={"12"} type='submit'>Kirim</Button>
-        </form>
+        <Center>
+          <Box width={"90%"}>
+            <form onSubmit={kirim}>
+              <FormControl>
+                <FormLabel>Nama</FormLabel>
+                <Input onChange={(e) => setNama(e.target.value)} type='text' />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Ucapan</FormLabel>
+                <Input onChange={(e) => setUcapan(e.target.value)} type='text' />
+              </FormControl>
+              <FormControl>
+                <RadioGroup onChange={setKehadiran} size={"lg"}>
+                  <Radio value='Saya Akan Hadir'>Saya Akan Hadir</Radio>
+                  <Radio value='Saya Tidak Hadir'>Saya Tidak Bisa Hadir</Radio>
+                </RadioGroup>
+              </FormControl>
+              <Button bgColor={"#b0d1b1"} mt={"12"} type='submit'>Kirim</Button>
+            </form>
+          </Box>
+        </Center>
       </Box>
       <Box bgColor={"#b0d1b1"}>
         <Text py={"14"} fontSize={"2xl"} fontWeight={"extrabold"} textAlign={"center"}>Ucapan</Text>
         <Box>
           <Center>
             <Grid gap={6}>
-{data.map((data1,index)=>(
-
-
-              <Card key={index} maxW='sm'>
-                <CardBody>
-                  <Stack mt='6' spacing='3'>
-                    <Heading size='md'>{data1.nama}</Heading>
-                    <Text>
-                      {data1.ucapan}
-                    </Text>
-                    <Badge colorScheme='green'>{data1.kehadiran}</Badge>
-                  </Stack>
-                </CardBody>
-                <Divider />
-                <CardFooter>
-                </CardFooter>
-              </Card>
-))}
-
+              {data.map((data1, index) => (
+                <Card key={index} maxW='sm'>
+                  <CardBody>
+                    <Stack mt='6' spacing='3'>
+                      <Heading size='md'>{data1.nama}</Heading>
+                      <Text>
+                        {data1.ucapan}
+                      </Text>
+                      <Badge colorScheme='green'>{data1.kehadiran}</Badge>
+                    </Stack>
+                  </CardBody>
+                  <Divider />
+                  <CardFooter>
+                  </CardFooter>
+                </Card>
+              ))}
             </Grid>
-
-
           </Center>
         </Box>
       </Box>
+      {/* {isNavbarDisabled ? null :
+        <Flex
+          as="nav"
+          direction="row"
+          justify="space-around"
+          align="center"
+          position="fixed"
+          bottom="0"
+          left="0"
+          width="100%"
+          height="60px"
+          backgroundColor="#387d10"
+          borderTopLeftRadius={"40"}
+          borderTopRightRadius={"40"}
+          color="#fff"
+        >
+          <Box as="button">
+            <ImNewspaper />
+          </Box>
+          <Box as="button">
+            <ImClock2 />
+          </Box>
+          <Box as="button">
+            <ImLocation2 />
+          </Box>
+          <Box as="button">
+            <ImPen />
+          </Box>
+        </Flex>
+      } */}
+
+
+
     </>
   )
 }
